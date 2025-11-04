@@ -1,13 +1,20 @@
-// app/page.js
 "use client";
-
 import { useState } from 'react';
+
+// Add this interface at the top
+interface SearchResult {
+  id: number;
+  disease_name: string;
+  ayurvedic_term: string;
+  snomed_code: string;
+  patient_explanation: string;
+}
 
 export default function Home() {
   // State for the search bar
   const [searchInput, setSearchInput] = useState('');
   // State to hold our search results
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   // State to know if we are currently searching
   const [isLoading, setIsLoading] = useState(false);
   // State to track if a search has been performed
@@ -16,21 +23,22 @@ export default function Home() {
   // This function now talks to our new API
   const handleSearch = async () => {
     if (!searchInput) return; // Don't search if the bar is empty
-
+    
     setIsLoading(true); // Start the loading spinner
     setResults([]); // Clear old results
     setHasSearched(true); // Mark that a search has been attempted
-
+    
     try {
       // 1. Call our new backend API route
       const response = await fetch(`/api/search?query=${searchInput}`);
       const data = await response.json();
+      
       // 2. Store the results from the API
       setResults(data);
     } catch (error) {
       console.error("Failed to fetch search results:", error);
     }
-
+    
     setIsLoading(false); // Stop the loading spinner
   };
 
@@ -92,7 +100,6 @@ export default function Home() {
           <p className="text-center text-gray-500">No results found for "{searchInput}"</p>
         )}
       </div>
-
     </main>
   );
 }

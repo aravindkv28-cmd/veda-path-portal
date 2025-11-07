@@ -43,7 +43,7 @@ export async function GET(request: Request) {
     console.log(`Received query: "${query}"`);
 
     // We add ': any[]' to tell the code what to expect
-    const extractedEntities: any[] = await ner(query);
+    const extractedEntities: any[] = await (ner as any)(query);
     console.log("Extracted entities:", extractedEntities);
 
     // --- 3. SEARCH DATABASE FOR EXTRACTED KEYWORDS ---

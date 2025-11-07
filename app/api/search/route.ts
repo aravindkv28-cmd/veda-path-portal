@@ -1,4 +1,4 @@
-// app/api/search/route.js
+// app/api/search/route.ts
 // --- THIS IS THE CORRECTED, COMPLETE CODE ---
 
 import { NextResponse } from 'next/server';
@@ -28,9 +28,20 @@ export async function GET(request: Request) {
 
     // --- 2. ENSURE THE NER MODEL IS LOADED ---
     const ner = await NerPipeline.getInstance();
-    
+
+    // --- ADDED CHECK TO PREVENT BUILD ERROR ---
+    if (!ner) {
+      console.error("NER model failed to initialize.");
+      // Return a server error response
+      return NextResponse.json(
+        { error: "Search service is not ready, please try again." },
+        { status: 503 } // 503 Service Unavailable
+      );
+    }
+    // --- END OF FIX ---
+
     console.log(`Received query: "${query}"`);
-    
+
     // We add ': any[]' to tell the code what to expect
     const extractedEntities: any[] = await ner(query);
     console.log("Extracted entities:", extractedEntities);
@@ -43,7 +54,7 @@ export async function GET(request: Request) {
       for (const entity of extractedEntities) {
         const searchTerm = entity.word;
         const searchResults = fuse.search(searchTerm);
-        
+
         for (const result of searchResults) {
           if (!addedIds.has(result.item.id)) {
             allResults.push(result.item);

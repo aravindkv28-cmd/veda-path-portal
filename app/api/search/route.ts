@@ -2,7 +2,7 @@
 // --- THIS IS THE CORRECTED, COMPLETE CODE ---
 
 import { NextResponse } from 'next/server';
-import { db } from '@/data/mock-db'; // Your mock database
+import { db } from '@/data/mock-db.js'; // Your mock database
 import Fuse from 'fuse.js'; // Your fuzzy search library
 import NerPipeline from '@/app/lib/ner'; // Import our AI helper
 

@@ -36,5 +36,3 @@ export const db = [
     patient_explanation: 'A headache (Shirahshula) is a pain or discomfort in the head or scalp. It can be a symptom of stress, migraine, or other issues.'
   }
 ];
-
-console.log("? mock-db.js loaded successfully! DB has", db.length, "entries");

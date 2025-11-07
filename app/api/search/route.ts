@@ -2,7 +2,7 @@
 // --- THIS IS THE CORRECTED, COMPLETE CODE ---
 
 import { NextResponse } from 'next/server';
-import { db } from '@/data/mock-db.js'; // Your mock database
+import { db } from '../../../data/mock-db.js'; // Your mock database
 import Fuse from 'fuse.js'; // Your fuzzy search library
 import NerPipeline from '@/app/lib/ner'; // Import our AI helper
 
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
 
     // --- 3. SEARCH DATABASE FOR EXTRACTED KEYWORDS ---
     let allResults: any[] = [];
-    const addedIds = new Set();
+    const addedIds =.new Set();
 
     if (extractedEntities.length > 0) {
       for (const entity of extractedEntities) {

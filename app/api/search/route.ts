@@ -11,6 +11,7 @@ const fuse = new Fuse(db, {
   keys: ['disease_name', 'ayurvedic_term'],
   includeScore: true,
   threshold: 0.4,
+  isCaseSensitive: false,
 });
 
 // This can help with serverless function performance

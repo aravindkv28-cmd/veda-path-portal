@@ -1,10 +1,10 @@
 // app/api/search/route.js
-// --- UPGRADED to use separate NER loader ---
+// --- THIS IS THE CORRECTED, COMPLETE CODE ---
 
 import { NextResponse } from 'next/server';
 import { db } from '@/data/mock-db'; // Your mock database
 import Fuse from 'fuse.js'; // Your fuzzy search library
-import NerPipeline from '@/app/lib/ner'; // --- IMPORT OUR NEW HELPER ---
+import NerPipeline from '@/app/lib/ner'; // Import our AI helper
 
 // --- CONFIGURE FUSE.JS (Your Scoring Algorithm) ---
 const fuse = new Fuse(db, {
@@ -16,7 +16,7 @@ const fuse = new Fuse(db, {
 // This can help with serverless function performance
 export const dynamic = 'force-dynamic';
 
-export async function GET(request) {
+export async function GET(request: Request) {
   try {
     // --- 1. GET THE USER'S RAW SEARCH NARRATIVE ---
     const { searchParams } = new URL(request.url);
@@ -30,22 +30,30 @@ export async function GET(request) {
     const ner = await NerPipeline.getInstance();
     
     console.log(`Received query: "${query}"`);
-    const extractedEntities = await ner(query);
+    
+    // We add ': any[]' to tell the code what to expect
+    const extractedEntities: any[] = await ner(query);
     console.log("Extracted entities:", extractedEntities);
 
-    if (extractedEntities.length === 0) {
-      const results = fuse.search(query).map(result => result.item);
-      return NextResponse.json(results);
-    }
-
-    // --- 3. SEARCH THE DATABASE FOR *EACH* EXTRACTED KEYWORD ---
-    let allResults = [];
+    // --- 3. SEARCH DATABASE FOR EXTRACTED KEYWORDS ---
+    let allResults: any[] = [];
     const addedIds = new Set();
 
-    for (const entity of extractedEntities) {
-      const searchTerm = entity.word; _
-      const searchResults = fuse.search(searchTerm);
-      
+    if (extractedEntities.length > 0) {
+      for (const entity of extractedEntities) {
+        const searchTerm = entity.word;
+        const searchResults = fuse.search(searchTerm);
+        
+        for (const result of searchResults) {
+          if (!addedIds.has(result.item.id)) {
+            allResults.push(result.item);
+            addedIds.add(result.item.id);
+          }
+        }
+      }
+    } else {
+      // If NER finds nothing, just search for the whole query
+      const searchResults = fuse.search(query);
       for (const result of searchResults) {
         if (!addedIds.has(result.item.id)) {
           allResults.push(result.item);

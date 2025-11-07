@@ -1,6 +1,4 @@
 // data/mock-db.js
-// This is our temporary database file.
-
 export const db = [
   {
     id: 1,
@@ -39,3 +37,4 @@ export const db = [
   }
 ];
 
+console.log("? mock-db.js loaded successfully! DB has", db.length, "entries");

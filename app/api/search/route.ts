@@ -49,7 +49,7 @@ export async function GET(request: Request) {
 
     // --- 3. SEARCH DATABASE FOR EXTRACTED KEYWORDS ---
     let allResults: any[] = [];
-    const addedIds =.new Set();
+    const addedIds = new Set(); // <-- THIS LINE IS NOW FIXED
 
     if (extractedEntities.length > 0) {
       for (const entity of extractedEntities) {

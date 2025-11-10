@@ -1,5 +1,5 @@
 ﻿// app/lib/ner.ts
-import { pipeline } from '@xenova/transformers';
+import { pipeline, PipelineType } from '@xenova/transformers';
 
 class NerPipeline {
   static task = 'token-classification';

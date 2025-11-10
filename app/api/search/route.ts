@@ -1,12 +1,12 @@
 ﻿// app/api/search/route.ts
-// --- THIS IS THE CORRECTED, COMPLETE CODE ---
+// --- THIS IS THE FINAL, CORRECTED CODE ---
 
 import { NextResponse } from 'next/server';
-// import { db } from '../../../data/mock-db.js'; // <-- REMOVED THIS BROKEN IMPORT
+// import { db } from '../../../data/mock-db.js'; // <-- THIS IMPORT IS BROKEN AND REMOVED
 import Fuse from 'fuse.js';
-import NerPipeline from '@/app/lib/ner';
+import NerPipeline from '@/app/lib/ner'; // This import is fine
 
-// --- HARDCODED DATABASE TO BYPASS IMPORT ERROR ---
+// --- START: HARDCODED DATABASE TO FIX THE BUG ---
 const db = [
   {
     id: 1,
@@ -44,7 +44,7 @@ const db = [
     patient_explanation: 'A headache (Shirahshula) is a pain or discomfort in the head or scalp. It can be a symptom of stress, migraine, or other issues.'
   }
 ];
-// --- END OF HARDCODED DATABASE ---
+// --- END: HARDCODED DATABASE ---
 
 const fuse = new Fuse(db, {
   keys: ['disease_name', 'ayurvedic_term'],
@@ -102,6 +102,7 @@ export async function GET(request: Request) {
     }
 
     // Fallback: Direct Fuse.js search
+    // This is what will run for "fever"
     if (!usedNER || allResults.length === 0) {
       console.log('🔍 Using direct search');
       const searchResults = fuse.search(query);

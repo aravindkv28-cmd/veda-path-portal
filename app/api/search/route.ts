@@ -1,8 +1,50 @@
 ﻿// app/api/search/route.ts
+// --- THIS IS THE CORRECTED, COMPLETE CODE ---
+
 import { NextResponse } from 'next/server';
-import { db } from '../../../data/mock-db.js';
+// import { db } from '../../../data/mock-db.js'; // <-- REMOVED THIS BROKEN IMPORT
 import Fuse from 'fuse.js';
 import NerPipeline from '@/app/lib/ner';
+
+// --- HARDCODED DATABASE TO BYPASS IMPORT ERROR ---
+const db = [
+  {
+    id: 1,
+    disease_name: 'Cough',
+    ayurvedic_term: 'Kasa',
+    snomed_code: '284196006',
+    patient_explanation: 'A cough (Kasa) is a reflex action to clear your airways of mucus and irritants such as dust or smoke.'
+  },
+  {
+    id: 2,
+    disease_name: 'Fever',
+    ayurvedic_term: 'Jvara',
+    snomed_code: '386661006',
+    patient_explanation: 'A fever (Jvara) is when your body temperature is higher than normal. It is a common sign of infection.'
+  },
+  {
+    id: 3,
+    disease_name: 'Diabetes',
+    ayurvedic_term: 'Madhumeha',
+    snomed_code: '73211009',
+    patient_explanation: 'Diabetes (Madhumeha) is a chronic condition where the body cannot control the amount of sugar in the blood.'
+  },
+  {
+    id: 4,
+    disease_name: 'Arthritis',
+    ayurvedic_term: 'Sandhivata',
+    snomed_code: '84229003',
+    patient_explanation: 'Arthritis (Sandhivata) causes pain, swelling, and stiffness in the joints, often related to inflammation.'
+  },
+  {
+    id: 5,
+    disease_name: 'Headache',
+    ayurvedic_term: 'Shirahshula',
+    snomed_code: '25064002',
+    patient_explanation: 'A headache (Shirahshula) is a pain or discomfort in the head or scalp. It can be a symptom of stress, migraine, or other issues.'
+  }
+];
+// --- END OF HARDCODED DATABASE ---
 
 const fuse = new Fuse(db, {
   keys: ['disease_name', 'ayurvedic_term'],
@@ -83,20 +125,3 @@ export async function GET(request: Request) {
     }, { status: 500 });
   }
 }
-```
-
----
-
-### **Step 5: Create `.gitignore` (if not exists)**
-
-Make sure you're NOT ignoring the `data` folder:
-```
-# .gitignore
-node_modules/
-.next/
-out/
-.env*.local
-.vercel
-*.log
-.DS_Store
-# DON'T add data/ here!
